@@ -1,40 +1,78 @@
 import 'package:flutter/material.dart';
+import 'package:imenu_mobile/category.dart';
+import 'package:imenu_mobile/menu_model.dart';
+import 'package:scoped_model/scoped_model.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(HomePage());
+}
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class HomePage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return HomePageState();
+  }
+}
+
+class HomePageState extends State<HomePage> {
+
+  final menu = MenuModel(menu: [
+    MenuItemModel("Appetizer", categories: [
+      Category("Appetizer 1"),
+      Category("Appetizer 2"),
+      Category("Appetizer 3"),
+    ]),
+    MenuItemModel("Main Course", categories: [
+      Category("Main Course 1"),
+      Category("Main Course 2"),
+      Category("Main Course 3"),
+    ]),
+    MenuItemModel("Dessert", categories: [
+      Category("Dessert 1"),
+      Category("Dessert 2"),
+      Category("Dessert 3"),
+    ]),
+    MenuItemModel("Beverages", categories: [
+      Category("Beverage 1"),
+      Category("Beverage 2"),
+      Category("Beverage 3"),
+    ]),
+  ]);
+
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
-      title: 'iMenu',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.red,
-      ),
-      home: DefaultTabController(
-          length: 4,
-          child: Scaffold(
-            appBar: AppBar(
-              title: Text('iMenu'),
-              bottom: TabBar(tabs: const [
-                Tab(text: "Appetizer"),
-                Tab(text: "Main Course"),
-                Tab(text: "Dessert"),
-                Tab(text: "Beverages"),
-              ]),
-            ),
-          )),
-    );
+        title: 'iMenu',
+        theme: ThemeData(
+          primarySwatch: Colors.red,
+        ),
+        home: ScopedModel<MenuModel>(
+          model: menu,
+          child: DefaultTabController(
+              length: menu.items.length,
+              initialIndex: menu.getSelectedIndex(),
+              child: Scaffold(
+                appBar: AppBar(
+                  title: Text('iMenu'),
+                  bottom: TabBar(
+                    tabs: buildTabs(menu),
+                    onTap: (i) {
+                      setState(() {
+                        menu.setSelected(i);
+                      });
+                    },
+                  ),
+                ),
+                body: ScopedModel(
+                    model: menu, child: CategoryList()),
+              )),
+        ));
   }
+}
+
+List<Tab> buildTabs(MenuModel menu) {
+  return menu.items.map((menuItem) => Tab(text: menuItem.name)).toList();
 }
 
 class MyHomePage extends StatefulWidget {
@@ -116,7 +154,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.display1,
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .display1,
             ),
           ],
         ),
