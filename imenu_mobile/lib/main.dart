@@ -15,17 +15,40 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-
   final menu = MenuModel(menu: [
     MenuItemModel("Appetizer", categories: [
-      Category("Appetizer 1"),
-      Category("Appetizer 2"),
-      Category("Appetizer 3"),
+      Category("Appetizer Category 1", items: [
+        CategoryItem("Appetizer 1", "", 90.0),
+        CategoryItem("Appetizer 2", "", 90.0),
+        CategoryItem("Appetizer 3", "", 90.0),
+      ]),
+      Category("Appetizer Category 2", items: [
+        CategoryItem("Appetizer 4", "", 90.0),
+        CategoryItem("Appetizer 5", "", 90.0),
+        CategoryItem("Appetizer 6", "", 90.0),
+      ]),
+      Category("Appetizer Category 3", items: [
+        CategoryItem("Appetizer 7", "", 90.0),
+        CategoryItem("Appetizer 8", "", 90.0),
+        CategoryItem("Appetizer 9", "", 90.0),
+      ]),
     ]),
     MenuItemModel("Main Course", categories: [
-      Category("Main Course 1"),
-      Category("Main Course 2"),
-      Category("Main Course 3"),
+      Category("Main Course 1", items: [
+        CategoryItem("Main Course 1", "", 90.0),
+        CategoryItem("Main Course 2", "", 90.0),
+        CategoryItem("Main Course 3", "", 90.0),
+      ]),
+      Category("Main Course 2", items: [
+        CategoryItem("Main Course 4", "", 90.0),
+        CategoryItem("Main Course 5", "", 90.0),
+        CategoryItem("Main Course 6", "", 90.0),
+      ]),
+      Category("Main Course 3", items: [
+        CategoryItem("Main Course 7", "", 90.0),
+        CategoryItem("Main Course 8", "", 90.0),
+        CategoryItem("Main Course 9", "", 90.0),
+      ]),
     ]),
     MenuItemModel("Dessert", categories: [
       Category("Dessert 1"),
@@ -41,7 +64,6 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
         title: 'iMenu',
         theme: ThemeData(
@@ -53,20 +75,20 @@ class HomePageState extends State<HomePage> {
               length: menu.items.length,
               initialIndex: menu.getSelectedIndex(),
               child: Scaffold(
-                appBar: AppBar(
-                  title: Text('iMenu'),
-                  bottom: TabBar(
-                    tabs: buildTabs(menu),
-                    onTap: (i) {
-                      setState(() {
-                        menu.setSelected(i);
-                      });
-                    },
+                  appBar: AppBar(
+                    title: Text('iMenu'),
+                    bottom: TabBar(
+                      tabs: buildTabs(menu),
+                      onTap: (i) {
+                        setState(() {
+                          menu.setSelected(i);
+                        });
+                      },
+                    ),
                   ),
-                ),
-                body: ScopedModel(
-                    model: menu, child: CategoryList()),
-              )),
+                  body: ScopedModel(model: menu, child: CategoryList())
+//                body:
+                  )),
         ));
   }
 }
@@ -154,10 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .display1,
+              style: Theme.of(context).textTheme.display1,
             ),
           ],
         ),
