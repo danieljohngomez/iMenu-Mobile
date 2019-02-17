@@ -1,17 +1,130 @@
 import 'package:flutter/material.dart';
 import 'package:imenu_mobile/calendar_page.dart';
 import 'package:imenu_mobile/category.dart';
+import 'package:imenu_mobile/info_page.dart';
 import 'package:imenu_mobile/menu_model.dart';
+import 'package:imenu_mobile/today.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 void main() {
   runApp(MaterialApp(
-    title: 'iMenu',
-    theme: ThemeData(
-      primarySwatch: Colors.red,
-    ),
-    home: HomePage(),
-  ));
+      title: 'iMenu',
+      theme: ThemeData(
+        primarySwatch: Colors.red,
+      ),
+      home: DefaultTabController(
+        length: 3,
+        initialIndex: 0,
+        child: MainPage(),
+      )));
+}
+
+class DrawerItem {
+  String title;
+  Icon icon;
+
+  DrawerItem(this.title, this.icon);
+}
+
+class MainPage extends StatefulWidget {
+  final drawerItems = [
+    DrawerItem("Home", Icon(Icons.home)),
+    DrawerItem("Today", Icon(Icons.view_day)),
+    DrawerItem("Calendar", Icon(Icons.calendar_today)),
+  ];
+  final List<Widget> pages = [HomePage(), TodayPage(), CalendarView()];
+
+
+  @override
+  State<StatefulWidget> createState() {
+    return MainState();
+  }
+}
+
+class MainState extends State<MainPage> {
+  int _selectedDrawerIndex = 0;
+
+  List<Widget> _buildDrawerChildren() {
+    List<Widget> children = [];
+    children.add(UserAccountsDrawerHeader(
+      accountName: Text("My Restaurant"),
+      accountEmail: Text("iMenu"),
+    ));
+    for (var i = 0; i < widget.drawerItems.length; i++) {
+      var drawerItem = widget.drawerItems[i];
+      children.add(ListTile(
+        title: Text(drawerItem.title),
+        leading: drawerItem.icon,
+        selected: i == _selectedDrawerIndex,
+        onTap: () {
+          setState(() {
+            _selectedDrawerIndex = i;
+            Navigator.pop(context);
+          });
+        },
+      ));
+    }
+    return children;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.drawerItems[_selectedDrawerIndex].title),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: _buildDrawerChildren(),
+        ),
+      ),
+      body: widget.pages[_selectedDrawerIndex],
+    );
+  }
+}
+
+class DrawerWidget extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return DrawerState();
+  }
+}
+
+class DrawerState extends State<DrawerWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            child: Text(
+              'iMenu',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            decoration: BoxDecoration(
+              color: Colors.redAccent,
+            ),
+          ),
+          ListTile(
+            title: Text("Home"),
+            onTap: () async {
+              Navigator.pop(context);
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => HomePage()));
+            },
+          ),
+          ListTile(
+            title: Text("Today"),
+          ),
+          ListTile(
+            title: Text("Calendar"),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class HomePage extends StatefulWidget {
@@ -22,6 +135,8 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  int _selectedTabIndex = 0;
+
   final menu = MenuModel(menu: [
     MenuItemModel("Appetizer", categories: [
       Category("Appetizer Category 1", items: [
@@ -69,43 +184,39 @@ class HomePageState extends State<HomePage> {
     ]),
   ]);
 
+  Widget getBody() {
+    if (_selectedTabIndex == 0)
+      return ScopedModel(model: menu, child: MenuPage());
+    else
+      return InfoPage();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ScopedModel<MenuModel>(
-      model: menu,
-      child: DefaultTabController(
-          length: menu.items.length,
-          initialIndex: menu.getSelectedIndex(),
-          child: Scaffold(
-              appBar: AppBar(
-                title: Text('iMenu'),
-                actions: [
-                  IconButton(
-                    icon: Icon(Icons.calendar_today),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => CalendarView(), fullscreenDialog: true),
-                      );
-                    },
-                  )
-                ],
-                bottom: TabBar(
-                  tabs: buildTabs(menu),
-                  onTap: (i) {
-                    setState(() {
-                      menu.setSelected(i);
-                    });
-                  },
-                ),
-              ),
-              body: ScopedModel(model: menu, child: CategoryList()))),
+    return DefaultTabController(
+      length: 2,
+      initialIndex: _selectedTabIndex,
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(kToolbarHeight),
+          child: AppBar(
+            bottom: TabBar(
+              tabs: [
+                Tab(text: "Menu"),
+                Tab(text: "Info"),
+              ],
+              onTap: (i) {
+                setState(() {
+                  _selectedTabIndex = i;
+                });
+              },
+            ),
+          ),
+        ),
+        body: getBody(),
+      ),
     );
   }
-}
-
-List<Tab> buildTabs(MenuModel menu) {
-  return menu.items.map((menuItem) => Tab(text: menuItem.name)).toList();
 }
 
 class MyHomePage extends StatefulWidget {

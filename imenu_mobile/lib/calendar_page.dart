@@ -15,9 +15,6 @@ class CalendarViewState extends State<CalendarView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Calendar"),
-        ),
         body: Container(
           margin: EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(

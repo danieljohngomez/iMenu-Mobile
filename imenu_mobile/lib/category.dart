@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:imenu_mobile/menu_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class CategoryList extends StatelessWidget {
+class MenuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MenuModel>(
@@ -13,8 +13,8 @@ class CategoryList extends StatelessWidget {
 
 List<Widget> buildListItem(MenuModel menuModel) {
   return menuModel
-      .getSelected()
-      .categories
+      .items
+      .expand((menuItemModel) => menuItemModel.categories)
       .map((category) =>
           new Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             new SizedBox(
