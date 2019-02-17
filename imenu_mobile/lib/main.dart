@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:imenu_mobile/calendar_page.dart';
 import 'package:imenu_mobile/category.dart';
 import 'package:imenu_mobile/menu_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 void main() {
-  runApp(HomePage());
+  runApp(MaterialApp(
+    title: 'iMenu',
+    theme: ThemeData(
+      primarySwatch: Colors.red,
+    ),
+    home: HomePage(),
+  ));
 }
 
 class HomePage extends StatefulWidget {
@@ -64,32 +71,36 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'iMenu',
-        theme: ThemeData(
-          primarySwatch: Colors.red,
-        ),
-        home: ScopedModel<MenuModel>(
-          model: menu,
-          child: DefaultTabController(
-              length: menu.items.length,
-              initialIndex: menu.getSelectedIndex(),
-              child: Scaffold(
-                  appBar: AppBar(
-                    title: Text('iMenu'),
-                    bottom: TabBar(
-                      tabs: buildTabs(menu),
-                      onTap: (i) {
-                        setState(() {
-                          menu.setSelected(i);
-                        });
-                      },
-                    ),
-                  ),
-                  body: ScopedModel(model: menu, child: CategoryList())
-//                body:
-                  )),
-        ));
+    return ScopedModel<MenuModel>(
+      model: menu,
+      child: DefaultTabController(
+          length: menu.items.length,
+          initialIndex: menu.getSelectedIndex(),
+          child: Scaffold(
+              appBar: AppBar(
+                title: Text('iMenu'),
+                actions: [
+                  IconButton(
+                    icon: Icon(Icons.calendar_today),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CalendarView(), fullscreenDialog: true),
+                      );
+                    },
+                  )
+                ],
+                bottom: TabBar(
+                  tabs: buildTabs(menu),
+                  onTap: (i) {
+                    setState(() {
+                      menu.setSelected(i);
+                    });
+                  },
+                ),
+              ),
+              body: ScopedModel(model: menu, child: CategoryList()))),
+    );
   }
 }
 
