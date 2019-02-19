@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:imenu_mobile/menu_model.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class MenuPage extends StatelessWidget {
   @override
@@ -49,10 +50,16 @@ Widget buildCategoryItem(CategoryItem categoryItem) {
       child: Card(
         child: Column(
           children: <Widget>[
-            Expanded( child: FittedBox(fit: BoxFit.fill,child: new Icon(Icons.image))),
+            Expanded(
+                child: CachedNetworkImage(
+                  fit: BoxFit.contain,
+                  placeholder: (context, s) => new CircularProgressIndicator(),
+                  imageUrl: 'https://picsum.photos/250?image=9',
+                )),
+            new SizedBox( height: 10,),
             new Text(categoryItem.name, style: TextStyle(fontSize: 18),),
             new Text("P${categoryItem.price}", style: TextStyle(fontSize: 16),),
-            new SizedBox( height: 10,)
+            new SizedBox( height: 10,),
           ],
         ),
       ),

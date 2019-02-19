@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1038408655556",
+    "firebase_url": "https://imenu-59599.firebaseio.com",
+    "project_id": "imenu-59599",
+    "storage_bucket": "imenu-59599.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038408655556:android:432c0ac56338f093",
+        "android_client_info": {
+          "package_name": "com.imenu.imenumobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1038408655556-b0mnf2jf6kferlk0rlqlnicr8an08ib5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC59FH0_g1Uy7FZ2hjqq0gnA6dtrOwQ6WY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
