@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:imenu_mobile/calendar_page.dart';
 import 'package:imenu_mobile/category.dart';
@@ -130,66 +131,17 @@ class DrawerState extends State<DrawerWidget> {
 class HomePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return HomePageState();
+    print('create');
+    return HomePageState([MenuPage(), InfoPage()]);
   }
 }
 
 class HomePageState extends State<HomePage> {
   int _selectedTabIndex = 0;
 
-  final menu = MenuModel(menu: [
-    MenuItemModel("Appetizer", categories: [
-      Category("Appetizer Category 1", items: [
-        CategoryItem("Appetizer 1", "", 90.0),
-        CategoryItem("Appetizer 2", "", 90.0),
-        CategoryItem("Appetizer 3", "", 90.0),
-      ]),
-      Category("Appetizer Category 2", items: [
-        CategoryItem("Appetizer 4", "", 90.0),
-        CategoryItem("Appetizer 5", "", 90.0),
-        CategoryItem("Appetizer 6", "", 90.0),
-      ]),
-      Category("Appetizer Category 3", items: [
-        CategoryItem("Appetizer 7", "", 90.0),
-        CategoryItem("Appetizer 8", "", 90.0),
-        CategoryItem("Appetizer 9", "", 90.0),
-      ]),
-    ]),
-    MenuItemModel("Main Course", categories: [
-      Category("Main Course 1", items: [
-        CategoryItem("Main Course 1", "", 90.0),
-        CategoryItem("Main Course 2", "", 90.0),
-        CategoryItem("Main Course 3", "", 90.0),
-      ]),
-      Category("Main Course 2", items: [
-        CategoryItem("Main Course 4", "", 90.0),
-        CategoryItem("Main Course 5", "", 90.0),
-        CategoryItem("Main Course 6", "", 90.0),
-      ]),
-      Category("Main Course 3", items: [
-        CategoryItem("Main Course 7", "", 90.0),
-        CategoryItem("Main Course 8", "", 90.0),
-        CategoryItem("Main Course 9", "", 90.0),
-      ]),
-    ]),
-    MenuItemModel("Dessert", categories: [
-      Category("Dessert 1"),
-      Category("Dessert 2"),
-      Category("Dessert 3"),
-    ]),
-    MenuItemModel("Beverages", categories: [
-      Category("Beverage 1"),
-      Category("Beverage 2"),
-      Category("Beverage 3"),
-    ]),
-  ]);
+  List<Widget> tabs;
 
-  Widget getBody() {
-    if (_selectedTabIndex == 0)
-      return ScopedModel(model: menu, child: MenuPage());
-    else
-      return InfoPage();
-  }
+  HomePageState(this.tabs);
 
   @override
   Widget build(BuildContext context) {
@@ -213,7 +165,7 @@ class HomePageState extends State<HomePage> {
             ),
           ),
         ),
-        body: getBody(),
+        body: tabs[_selectedTabIndex],
       ),
     );
   }

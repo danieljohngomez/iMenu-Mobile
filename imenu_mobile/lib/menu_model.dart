@@ -3,12 +3,12 @@ import 'dart:collection';
 import 'package:scoped_model/scoped_model.dart';
 
 class MenuModel extends Model {
-  final List<MenuItemModel> menu;
+  List<MenuItemModel> menu = [];
   int _selectedIndex = 0;
 
-  MenuModel({this.menu = const []});
+  MenuModel();
 
-  UnmodifiableListView<MenuItemModel> get items => UnmodifiableListView(menu);
+  List<MenuItemModel> get items => menu;
 
   MenuItemModel getSelected() {
     return menu[_selectedIndex];
@@ -20,12 +20,17 @@ class MenuModel extends Model {
 
   void add(MenuItemModel menuItem) {
     menu.add(menuItem);
-    notifyListeners();
+//    notifyListeners();
   }
 
   void setSelected(int index) {
     _selectedIndex = index;
     notifyListeners();
+  }
+
+  void setMenu(List<MenuItemModel> menu) {
+    this.menu = menu;
+//    setSelected(0);
   }
 }
 
@@ -36,17 +41,30 @@ class MenuItemModel extends Model {
   MenuItemModel(this.name, {this.categories = const []});
 }
 
-class Category {
+class Category extends Model{
+  bool loaded = false;
   String name;
   List<CategoryItem> items;
 
   Category(this.name, {this.items = const []});
+
+  void setItems(List<CategoryItem> items) {
+    this.items = items;
+    notifyListeners();
+  }
 }
 
-class CategoryItem {
+class CategoryItem extends Model {
   String name;
   String image;
   double price;
+  bool loadImage = false;
 
   CategoryItem(this.name, this.image, this.price);
+
+  void setImage(String image) {
+    this.image = image;
+    loadImage = true;
+    notifyListeners();
+  }
 }
