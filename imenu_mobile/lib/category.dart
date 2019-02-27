@@ -92,6 +92,7 @@ List<Widget> buildListItem(MenuModel menuModel) {
         model: category,
         child:
             ScopedModelDescendant<Category>(builder: (context, child, model) {
+          if (model.loaded && model.items.isEmpty) return SizedBox();
           return new Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -112,7 +113,9 @@ List<Widget> buildListItem(MenuModel menuModel) {
 Widget buildCategoryList(Category model) {
   if (!model.loaded) return Center(child: CircularProgressIndicator());
   if (model.items.isEmpty)
-    return Container(height: 10,);
+    return Container(
+      height: 10,
+    );
   return Container(
     height: 200,
     child: new ListView(

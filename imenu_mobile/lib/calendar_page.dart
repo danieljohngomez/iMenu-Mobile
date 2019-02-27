@@ -77,11 +77,12 @@ class CalendarViewState extends State<CalendarView> {
 
     List<Widget> reservationsUi = [];
     for (var reservation in dateModel.reservations) {
+      var reservationEnd = reservation.add(Duration(minutes: 30));
       var ui = Card(
           child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: new Text(
-          formatter.format(reservation),
+          "${formatter.format(reservation)} - ${formatter.format(reservationEnd)}",
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 16, color: Colors.black87),
         ),
