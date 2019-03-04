@@ -4,6 +4,7 @@ import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
     show CalendarCarousel;
 import 'package:intl/intl.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:toast/toast.dart';
 
 class CalendarView extends StatefulWidget {
   @override
@@ -32,37 +33,38 @@ class CalendarViewState extends State<CalendarView> {
     });
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: ()=> {},
-        child: Icon(Icons.add),
-      ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => _reserve(),
+          child: Icon(Icons.add),
+        ),
         body: Container(
-      margin: EdgeInsets.symmetric(horizontal: 16.0),
-      child: Column(
-        children: [
-          CalendarCarousel(
-            onDayPressed: (DateTime date, List<dynamic> u) {
-              this.setState(() => dateModel.setDate(date));
-            },
-            weekendTextStyle: TextStyle(
-              color: Colors.red,
-            ),
-            thisMonthDayBorderColor: Colors.grey,
-            weekFormat: false,
-            height: 420.0,
-            selectedDateTime: dateModel.date,
-            daysHaveCircularBorder: true,
+          margin: EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            children: [
+              CalendarCarousel(
+                onDayPressed: (DateTime date, List<dynamic> u) {
+                  this.setState(() => dateModel.setDate(date));
+                },
+                weekendTextStyle: TextStyle(
+                  color: Colors.red,
+                ),
+                thisMonthDayBorderColor: Colors.grey,
+                weekFormat: false,
+                height: 420.0,
+                selectedDateTime: dateModel.date,
+                daysHaveCircularBorder: true,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ScopedModel<DateModel>(
+                  model: dateModel,
+                  child: ScopedModelDescendant<DateModel>(
+                      builder: (context, child, model) =>
+                          _buildReservations(model)))
+            ],
           ),
-          SizedBox(
-            height: 20,
-          ),
-          ScopedModel<DateModel>(
-              model: dateModel,
-              child: ScopedModelDescendant<DateModel>(
-                  builder: (context, child, model) =>
-                      _buildReservations(model)))
-        ],
-      ),
-    ));
+        ));
   }
 
   Widget _buildReservations(DateModel dateModel) {
@@ -95,6 +97,32 @@ class CalendarViewState extends State<CalendarView> {
     );
   }
 
+  _reserve() {
+    var now = TimeOfDay.now();
+    showTimePicker(context: context, initialTime: now).then((time) {
+      if (time != null) {
+        var date = dateModel.date;
+        date = new DateTime(
+            date.year, date.month, date.day, time.hour, time.minute);
+        var conflictingDate = dateModel.reservations
+            .firstWhere((d) => date.difference(d).inMinutes <= 30, orElse: () => null);
+        if (conflictingDate != null) {
+          Scaffold.of(context).showSnackBar(
+              SnackBar(content: Text("Time selected is already reserved")));
+          return;
+        }
+
+        Toast.show("Adding reservation...", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+        Firestore.instance
+            .collection("reservations")
+            .add({"date": date}).then((doc) {
+          Scaffold.of(context).showSnackBar(
+              SnackBar(content: Text("Reservation successfully added")));
+          setState(() {});
+        });
+      }
+    });
+  }
 }
 
 class DateModel extends Model {

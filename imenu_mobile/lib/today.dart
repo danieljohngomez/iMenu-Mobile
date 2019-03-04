@@ -94,24 +94,25 @@ class TableList extends StatelessWidget {
       ));
       reservationsUi.add(ui);
     }
-    return [
-      new SizedBox(height: 20),
-      Text(
-        "Reservations",
-        style: TextStyle(fontSize: 18, color: Colors.black87),
-      ),
-      new SizedBox(height: 20),
-      reservationsUi.isEmpty
-          ? Text(
-              "No reservations for today",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, color: Colors.black38),
-            )
-          : ListView(
-              children: reservationsUi,
-              shrinkWrap: true,
-            )
-    ];
+    return [Text("")];
+//    return [
+//      new SizedBox(height: 20),
+//      Text(
+//        "Reservations",
+//        style: TextStyle(fontSize: 18, color: Colors.black87),
+//      ),
+//      new SizedBox(height: 20),
+//      reservationsUi.isEmpty
+//          ? Text(
+//              "No reservations for today",
+//              textAlign: TextAlign.center,
+//              style: TextStyle(fontSize: 16, color: Colors.black38),
+//            )
+//          : ListView(
+//              children: reservationsUi,
+//              shrinkWrap: true,
+//            )
+//    ];
   }
 }
 
