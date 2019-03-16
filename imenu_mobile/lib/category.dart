@@ -51,10 +51,6 @@ class MenuPageState extends State<MenuPage>
               var itemModel = new CategoryItem(
                   item["name"], item["image"], item["price"] + .0);
               categoryItems.add(itemModel);
-
-              var url =
-                  await storage.ref().child(itemModel.image).getDownloadURL();
-              itemModel.image = url;
               itemModel.loadImage = true;
             }
             categoryModel.loaded = true;
