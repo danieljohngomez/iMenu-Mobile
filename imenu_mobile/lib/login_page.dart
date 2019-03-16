@@ -10,6 +10,7 @@ class LoginScreen3 extends StatefulWidget {
 }
 
 class _LoginScreen3State extends State<LoginScreen3> {
+  final signUpNameController = TextEditingController();
   final signUpEmailController = TextEditingController();
   final signUpPasswordController = TextEditingController();
   final signUpConfirmPasswordController = TextEditingController();
@@ -31,15 +32,7 @@ class _LoginScreen3State extends State<LoginScreen3> {
   Widget HomePage() {
     return new Container(
       height: MediaQuery.of(context).size.height,
-      decoration: BoxDecoration(
-        color: Colors.redAccent,
-        image: DecorationImage(
-          colorFilter: new ColorFilter.mode(
-              Colors.black.withOpacity(0.1), BlendMode.dstATop),
-          image: AssetImage('assets/images/mountains.jpg'),
-          fit: BoxFit.cover,
-        ),
-      ),
+      color: Colors.redAccent,
       child: new Column(
         children: <Widget>[
           Container(
@@ -64,13 +57,6 @@ class _LoginScreen3State extends State<LoginScreen3> {
                     fontSize: 20.0,
                   ),
                 ),
-//                Text(
-//                  "App",
-//                  style: TextStyle(
-//                      color: Colors.white,
-//                      fontSize: 20.0,
-//                      fontWeight: FontWeight.bold),
-//                ),
               ],
             ),
           ),
@@ -83,9 +69,9 @@ class _LoginScreen3State extends State<LoginScreen3> {
                 new Expanded(
                   child: new OutlineButton(
                     shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(30.0)),
+                        borderRadius: new BorderRadius.circular(30.0)
+                    ),
                     color: Colors.redAccent,
-                    highlightedBorderColor: Colors.white,
                     onPressed: () => gotoSignup(),
                     child: new Container(
                       padding: const EdgeInsets.symmetric(
@@ -158,15 +144,7 @@ class _LoginScreen3State extends State<LoginScreen3> {
     return SingleChildScrollView(
       child: new Container(
         height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          image: DecorationImage(
-            colorFilter: new ColorFilter.mode(
-                Colors.black.withOpacity(0.05), BlendMode.dstATop),
-            image: AssetImage('assets/images/mountains.jpg'),
-            fit: BoxFit.cover,
-          ),
-        ),
+        color: Colors.white,
         child: new Column(
           children: <Widget>[
             Container(
@@ -314,150 +292,6 @@ class _LoginScreen3State extends State<LoginScreen3> {
                 ],
               ),
             ),
-//            new Container(
-//              width: MediaQuery.of(context).size.width,
-//              margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
-//              alignment: Alignment.center,
-//              child: Row(
-//                children: <Widget>[
-//                  new Expanded(
-//                    child: new Container(
-//                      margin: EdgeInsets.all(8.0),
-//                      decoration: BoxDecoration(border: Border.all(width: 0.25)),
-//                    ),
-//                  ),
-////                  Text(
-////                    "OR CONNECT WITH",
-////                    style: TextStyle(
-////                      color: Colors.grey,
-////                      fontWeight: FontWeight.bold,
-////                    ),
-////                  ),
-////                  new Expanded(
-////                    child: new Container(
-////                      margin: EdgeInsets.all(8.0),
-////                      decoration: BoxDecoration(border: Border.all(width: 0.25)),
-////                    ),
-////                  ),
-//                ],
-//              ),
-//            ),
-//            new Container(
-//              width: MediaQuery.of(context).size.width,
-//              margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
-//              child: new Row(
-//                children: <Widget>[
-//                  new Expanded(
-//                    child: new Container(
-//                      margin: EdgeInsets.only(right: 8.0),
-//                      alignment: Alignment.center,
-//                      child: new Row(
-//                        children: <Widget>[
-//                          new Expanded(
-//                            child: new FlatButton(
-//                              shape: new RoundedRectangleBorder(
-//                                borderRadius: new BorderRadius.circular(30.0),
-//                              ),
-//                              color: Color(0Xff3B5998),
-//                              onPressed: () => {},
-//                              child: new Container(
-//                                child: new Row(
-//                                  mainAxisAlignment: MainAxisAlignment.center,
-//                                  children: <Widget>[
-//                                    new Expanded(
-//                                      child: new FlatButton(
-//                                        onPressed: ()=>{},
-//                                        padding: EdgeInsets.only(
-//                                          top: 20.0,
-//                                          bottom: 20.0,
-//                                        ),
-//                                        child: new Row(
-//                                          mainAxisAlignment:
-//                                          MainAxisAlignment.spaceEvenly,
-//                                          children: <Widget>[
-//                                            Icon(
-//                                              const IconData(0xea90,
-//                                                  fontFamily: 'icomoon'),
-//                                              color: Colors.white,
-//                                              size: 15.0,
-//                                            ),
-//                                            Text(
-//                                              "FACEBOOK",
-//                                              textAlign: TextAlign.center,
-//                                              style: TextStyle(
-//                                                  color: Colors.white,
-//                                                  fontWeight: FontWeight.bold),
-//                                            ),
-//                                          ],
-//                                        ),
-//                                      ),
-//                                    ),
-//                                  ],
-//                                ),
-//                              ),
-//                            ),
-//                          ),
-//                        ],
-//                      ),
-//                    ),
-//                  ),
-//                  new Expanded(
-//                    child: new Container(
-//                      margin: EdgeInsets.only(left: 8.0),
-//                      alignment: Alignment.center,
-//                      child: new Row(
-//                        children: <Widget>[
-//                          new Expanded(
-//                            child: new FlatButton(
-//                              shape: new RoundedRectangleBorder(
-//                                borderRadius: new BorderRadius.circular(30.0),
-//                              ),
-//                              color: Color(0Xffdb3236),
-//                              onPressed: () => {},
-//                              child: new Container(
-//                                child: new Row(
-//                                  mainAxisAlignment: MainAxisAlignment.center,
-//                                  children: <Widget>[
-//                                    new Expanded(
-//                                      child: new FlatButton(
-//                                        onPressed: ()=>{},
-//                                        padding: EdgeInsets.only(
-//                                          top: 20.0,
-//                                          bottom: 20.0,
-//                                        ),
-//                                        child: new Row(
-//                                          mainAxisAlignment:
-//                                          MainAxisAlignment.spaceEvenly,
-//                                          children: <Widget>[
-//                                            Icon(
-//                                              const IconData(0xea88,
-//                                                  fontFamily: 'icomoon'),
-//                                              color: Colors.white,
-//                                              size: 15.0,
-//                                            ),
-//                                            Text(
-//                                              "GOOGLE",
-//                                              textAlign: TextAlign.center,
-//                                              style: TextStyle(
-//                                                  color: Colors.white,
-//                                                  fontWeight: FontWeight.bold),
-//                                            ),
-//                                          ],
-//                                        ),
-//                                      ),
-//                                    ),
-//                                  ],
-//                                ),
-//                              ),
-//                            ),
-//                          ),
-//                        ],
-//                      ),
-//                    ),
-//                  ),
-//                ],
-//              ),
-//            )
           ],
         ),
       ),
@@ -468,26 +302,58 @@ class _LoginScreen3State extends State<LoginScreen3> {
     return SingleChildScrollView(
       child: new Container(
         height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          image: DecorationImage(
-            colorFilter: new ColorFilter.mode(
-                Colors.black.withOpacity(0.05), BlendMode.dstATop),
-            image: AssetImage('assets/images/mountains.jpg'),
-            fit: BoxFit.cover,
-          ),
-        ),
         child: new Column(
           children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(100.0),
-              child: Center(
-                child: Icon(
-                  Icons.fastfood,
-                  color: Colors.redAccent,
-                  size: 50.0,
+            new Row(
+              children: <Widget>[
+                new Expanded(
+                  child: new Padding(
+                    padding: const EdgeInsets.only(left: 40.0, top: 100),
+                    child: new Text(
+                      "NAME",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.redAccent,
+                        fontSize: 15.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            new Container(
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                      color: Colors.redAccent,
+                      width: 0.5,
+                      style: BorderStyle.solid),
                 ),
               ),
+              padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+              child: new Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  new Expanded(
+                    child: TextField(
+                      controller: signUpNameController,
+                      textAlign: TextAlign.left,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'John Doe',
+                        hintStyle: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 24,
             ),
             new Row(
               children: <Widget>[
@@ -537,7 +403,7 @@ class _LoginScreen3State extends State<LoginScreen3> {
                 ],
               ),
             ),
-            Divider(
+            SizedBox(
               height: 24.0,
             ),
             new Row(
@@ -589,7 +455,7 @@ class _LoginScreen3State extends State<LoginScreen3> {
                 ],
               ),
             ),
-            Divider(
+            SizedBox(
               height: 24.0,
             ),
             new Row(
@@ -641,7 +507,7 @@ class _LoginScreen3State extends State<LoginScreen3> {
                 ],
               ),
             ),
-            Divider(
+            SizedBox(
               height: 24.0,
             ),
             new Row(
@@ -666,7 +532,7 @@ class _LoginScreen3State extends State<LoginScreen3> {
             ),
             new Container(
               width: MediaQuery.of(context).size.width,
-              margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 50.0),
+              margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
               alignment: Alignment.center,
               child: new Row(
                 children: <Widget>[Expanded(child: buildSignUpButton())],
@@ -737,10 +603,11 @@ class _LoginScreen3State extends State<LoginScreen3> {
   }
 
   void _doSignUp() async {
+    String name = signUpNameController.text;
     String email = signUpEmailController.text;
     String password = signUpPasswordController.text;
     String confirmPassword = signUpConfirmPasswordController.text;
-    if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+    if (name.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
       Scaffold.of(context)
           .showSnackBar(SnackBar(content: Text("Please fill up all fields")));
       return;
@@ -753,9 +620,13 @@ class _LoginScreen3State extends State<LoginScreen3> {
     FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((user) {
-      Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text("Sign up successful")));
-      signUpVisibilityModel.setLoading(false);
+      var updateInfo = UserUpdateInfo();
+      updateInfo.displayName = name;
+      user.updateProfile(updateInfo).then((_) {
+        Scaffold.of(context)
+            .showSnackBar(SnackBar(content: Text("Sign up successful")));
+        signUpVisibilityModel.setLoading(false);
+      });
     }).catchError((error) {
       var e = error as PlatformException;
       Scaffold.of(context).showSnackBar(SnackBar(content: Text(e.message)));

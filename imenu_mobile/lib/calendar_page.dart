@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
     show CalendarCarousel;
+import 'package:imenu_mobile/reservation_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:toast/toast.dart';
@@ -14,22 +15,32 @@ class CalendarView extends StatefulWidget {
 }
 
 class CalendarViewState extends State<CalendarView> {
+  DateTime currentDateTime = DateTime.now();
+
   DateModel dateModel = new DateModel(DateTime.now(), []);
 
   @override
   Widget build(BuildContext context) {
-    var day =
-        DateTime(dateModel.date.year, dateModel.date.month, dateModel.date.day);
+    var day = DateTime(
+        currentDateTime.year, currentDateTime.month, currentDateTime.day);
     var dayAfter = day.add(Duration(days: 1));
     Firestore.instance
         .collection("reservations")
-        .where("date", isGreaterThanOrEqualTo: day, isLessThan: dayAfter)
+        .where("start", isGreaterThanOrEqualTo: day)
         .getDocuments()
         .then((documents) {
-      List<DateTime> reservations =
-          documents.documents.map((d) => d["date"] as DateTime).toList();
+      List<ReservationTime> reservations = documents.documents
+          .where((d) => (d["end"] as DateTime).isBefore(dayAfter) )
+          .map((d) =>
+              new ReservationTime(d["start"] as DateTime, d["end"] as DateTime, d["table"]))
+          .toList();
       print("Found ${documents.documents.length} reservations for ${day.day}");
       dateModel.setReservations(reservations);
+    });
+
+    Firestore.instance.collection("tables").getDocuments().then((tableDoc) {
+      List<String> tables = tableDoc.documents.map((doc) => "" + doc["name"]).toList();
+      dateModel.setTables(tables);
     });
 
     return Scaffold(
@@ -51,7 +62,7 @@ class CalendarViewState extends State<CalendarView> {
                 thisMonthDayBorderColor: Colors.grey,
                 weekFormat: false,
                 height: 420.0,
-                selectedDateTime: dateModel.date,
+                selectedDateTime: currentDateTime,
                 daysHaveCircularBorder: true,
               ),
               SizedBox(
@@ -79,56 +90,40 @@ class CalendarViewState extends State<CalendarView> {
 
     List<Widget> reservationsUi = [];
     for (var reservation in dateModel.reservations) {
-      var reservationEnd = reservation.add(Duration(minutes: 30));
       var ui = Card(
           child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: new Text(
-          "${formatter.format(reservation)} - ${formatter.format(reservationEnd)}",
+          "${formatter.format(reservation.start)} - ${formatter.format(reservation.end)}, Table: ${reservation.table}",
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 16, color: Colors.black87),
         ),
       ));
       reservationsUi.add(ui);
     }
-    return ListView(
-      children: reservationsUi,
-      shrinkWrap: true,
+    return Expanded(
+      child: ListView(
+        children: reservationsUi,
+      ),
     );
   }
 
   _reserve() {
-    var now = TimeOfDay.now();
-    showTimePicker(context: context, initialTime: now).then((time) {
-      if (time != null) {
-        var date = dateModel.date;
-        date = new DateTime(
-            date.year, date.month, date.day, time.hour, time.minute);
-        var conflictingDate = dateModel.reservations
-            .firstWhere((d) => date.difference(d).inMinutes <= 30, orElse: () => null);
-        if (conflictingDate != null) {
-          Scaffold.of(context).showSnackBar(
-              SnackBar(content: Text("Time selected is already reserved")));
-          return;
-        }
+    showDialog(context: context, builder: (_) => new ReservationDialog(dateModel.tables, dateModel.reservations, () {
+      setState(() {
 
-        Toast.show("Adding reservation...", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
-        Firestore.instance
-            .collection("reservations")
-            .add({"date": date}).then((doc) {
-          Scaffold.of(context).showSnackBar(
-              SnackBar(content: Text("Reservation successfully added")));
-          setState(() {});
-        });
-      }
-    });
+      });
+    }));
   }
+
 }
 
 class DateModel extends Model {
   DateTime date;
-  List<DateTime> reservations;
+  List<ReservationTime> reservations;
   bool reservationsLoaded = false;
+  bool tablesLoaded = false;
+  List<String> tables;
 
   DateModel(this.date, this.reservations);
 
@@ -139,9 +134,23 @@ class DateModel extends Model {
     notifyListeners();
   }
 
-  void setReservations(List<DateTime> reservations) {
+  void setReservations(List<ReservationTime> reservations) {
     this.reservations = reservations;
     this.reservationsLoaded = true;
     notifyListeners();
   }
+
+  void setTables(List<String> tables) {
+    this.tables = tables;
+    this.tablesLoaded = true;
+  }
+
+}
+
+class ReservationTime {
+  DateTime start;
+  DateTime end;
+  String table;
+
+  ReservationTime(this.start, this.end, this.table);
 }

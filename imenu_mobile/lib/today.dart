@@ -24,7 +24,7 @@ class TodayPageState extends State<TodayPage> {
   void _mapDocuments(QuerySnapshot data) {
     todayModel.tables = [];
     data.documents.forEach((doc) => todayModel.setTables(data.documents
-        .map((doc) => Table(doc["number"], doc["occupied"]))
+        .map((doc) => Table(doc["name"], doc["occupied"]))
         .toList()));
   }
 
@@ -59,7 +59,7 @@ class TableList extends StatelessWidget {
               children: <Widget>[
                 new SizedBox(height: 20),
                 new Text(
-                  "#${table.number}",
+                  "${table.name}",
                   style: TextStyle(
                       fontSize: 40,
                       color: (table.occupied) ? Colors.red : Colors.green),
@@ -139,7 +139,7 @@ class TodayModel extends Model {
       return;
     }
 
-    var iterator = tables.where((t) => t.number == table.number);
+    var iterator = tables.where((t) => t.name == table.name);
     if (iterator.length <= 0) {
       tables.add(table);
       notifyListeners();
@@ -153,11 +153,11 @@ class TodayModel extends Model {
 }
 
 class Table {
-  int number;
+  String name;
   bool occupied = false;
 
-  Table(int number, bool occupied) {
-    this.number = number;
+  Table(String name, bool occupied) {
+    this.name = name;
     this.occupied = occupied == null ? false : occupied;
   }
 }
