@@ -176,6 +176,9 @@ class InfoPageState extends State<InfoPage> {
         package: "com.google.android.apps.maps",
       );
       await intent.launch();
+    } else if (Platform.isIOS) {
+      url = "https://www.google.com/maps/search/?api=1&query=${info.mapLatitude},${info.mapLongitude}";
+      await launch(url);
     }
   }
 
