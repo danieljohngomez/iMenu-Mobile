@@ -1,0 +1,2 @@
+alias = iMenu
+pw = imenumobile
