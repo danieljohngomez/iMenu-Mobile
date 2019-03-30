@@ -19,10 +19,14 @@ class CalendarViewState extends State<CalendarView> {
 
   DateModel dateModel = new DateModel(DateTime.now(), []);
 
+  DateTime toDateTime(Timestamp t) {
+    return new DateTime.fromMillisecondsSinceEpoch(t.millisecondsSinceEpoch);
+  }
+
   @override
   Widget build(BuildContext context) {
     var day = DateTime(
-        currentDateTime.year, currentDateTime.month, currentDateTime.day);
+        dateModel.date.year, dateModel.date.month, dateModel.date.day);
     var dayAfter = day.add(Duration(days: 1));
     Firestore.instance
         .collection("reservations")
@@ -30,9 +34,9 @@ class CalendarViewState extends State<CalendarView> {
         .getDocuments()
         .then((documents) {
       List<ReservationTime> reservations = documents.documents
-          .where((d) => (d["end"] as DateTime).isBefore(dayAfter) )
+          .where((d) => toDateTime(d["end"]).isBefore(dayAfter) )
           .map((d) =>
-              new ReservationTime(d["start"] as DateTime, d["end"] as DateTime, d["table"]))
+              new ReservationTime(toDateTime(d["start"]), toDateTime(d["end"]), d["table"]))
           .toList();
       print("Found ${documents.documents.length} reservations for ${day.day}");
       dateModel.setReservations(reservations);
@@ -62,7 +66,7 @@ class CalendarViewState extends State<CalendarView> {
                 thisMonthDayBorderColor: Colors.grey,
                 weekFormat: false,
                 height: 420.0,
-                selectedDateTime: currentDateTime,
+                selectedDateTime: dateModel.date,
                 daysHaveCircularBorder: true,
               ),
               SizedBox(
