@@ -59,8 +59,9 @@ class CategoryItem extends Model {
   String image;
   double price;
   bool loadImage = false;
+  String description;
 
-  CategoryItem(this.name, this.image, this.price);
+  CategoryItem(this.name, this.image, this.price, this.description);
 
   void setImage(String image) {
     this.image = image;

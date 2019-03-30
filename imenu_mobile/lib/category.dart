@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:imenu_mobile/food_info_dialog.dart';
 import 'package:imenu_mobile/menu_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -49,7 +50,7 @@ class MenuPageState extends State<MenuPage>
             List<CategoryItem> categoryItems = [];
             for (var item in items.documents) {
               var itemModel = new CategoryItem(
-                  item["name"], item["image"], item["price"] + .0);
+                  item["name"], item["image"], item["price"] + .0, item["description"]);
               categoryItems.add(itemModel);
               itemModel.loadImage = true;
             }
@@ -100,13 +101,13 @@ List<Widget> buildListItem(MenuModel menuModel) {
                   style: TextStyle(fontSize: 20),
                 ),
                 new SizedBox(height: 10),
-                buildCategoryList(model),
+                buildCategoryList(model, context),
               ]);
         }));
   }).toList();
 }
 
-Widget buildCategoryList(Category model) {
+Widget buildCategoryList(Category model, BuildContext context) {
   if (!model.loaded) return Center(child: CircularProgressIndicator());
   if (model.items.isEmpty)
     return Container(
@@ -117,46 +118,49 @@ Widget buildCategoryList(Category model) {
     child: new ListView(
       key: Key(model.name),
       scrollDirection: Axis.horizontal,
-      children: buildCategory(model),
+      children: buildCategory(model, context),
     ),
   );
 }
 
-List<Widget> buildCategory(Category category) {
+List<Widget> buildCategory(Category category, BuildContext context) {
   return category.items
-      .map((categoryItem) => buildCategoryItem(categoryItem))
+      .map((categoryItem) => buildCategoryItem(categoryItem, context))
       .toList();
 }
 
-Widget buildCategoryItem(CategoryItem categoryItem) {
-  return Container(
-    width: 200,
-    child: Card(
-      child: Column(
-        children: <Widget>[
-          categoryItem.loadImage
-              ? Expanded(
-                  child: CachedNetworkImage(
-                  fit: BoxFit.contain,
-                  placeholder: (context, s) => new CircularProgressIndicator(),
-                  imageUrl: categoryItem.image,
-                ))
-              : new CircularProgressIndicator(),
-          new SizedBox(
-            height: 10,
-          ),
-          new Text(
-            categoryItem.name,
-            style: TextStyle(fontSize: 18),
-          ),
-          new Text(
-            "P${categoryItem.price}",
-            style: TextStyle(fontSize: 16),
-          ),
-          new SizedBox(
-            height: 10,
-          ),
-        ],
+Widget buildCategoryItem(CategoryItem categoryItem, BuildContext context) {
+  return InkWell(
+    onTap: () => { showDialog(context: context, builder: (_) => new FoodInfoDialog(categoryItem, context)) },
+    child: Container(
+      width: 200,
+      child: Card(
+        child: Column(
+          children: <Widget>[
+            categoryItem.loadImage
+                ? Expanded(
+                    child: CachedNetworkImage(
+                    fit: BoxFit.contain,
+                    placeholder: (context, s) => new CircularProgressIndicator(),
+                    imageUrl: categoryItem.image,
+                  ))
+                : new CircularProgressIndicator(),
+            new SizedBox(
+              height: 10,
+            ),
+            new Text(
+              categoryItem.name,
+              style: TextStyle(fontSize: 18),
+            ),
+            new Text(
+              "P${categoryItem.price}",
+              style: TextStyle(fontSize: 16),
+            ),
+            new SizedBox(
+              height: 10,
+            ),
+          ],
+        ),
       ),
     ),
   );
